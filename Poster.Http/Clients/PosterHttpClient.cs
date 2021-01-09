@@ -2,6 +2,7 @@ namespace Poster.Http.Clients
 {
     using System;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
     using Abstract;
     using Core.Types;
@@ -19,52 +20,52 @@ namespace Poster.Http.Clients
             _httpClient = httpClientFactory.CreateClient("test");
         }
 
-        public async Task<TResult> GetAsync<TResult>(string url) where TResult : class
+        public async Task<TResult> GetAsync<TResult>(string url, CancellationToken cancellationToken = default) where TResult : class
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException("Url should not be empty or null", nameof(url));
 
-            var httpResponseMessage = await _httpClient.GetAsync(url);
+            var httpResponseMessage = await _httpClient.GetAsync(url, cancellationToken);
 
             return await DeserializeResponseMessageAsync<TResult>(httpResponseMessage);
         }
 
-        public async Task<TResult> PostAsync<TResult>(string url, object? body = null) where TResult : class
+        public async Task<TResult> PostAsync<TResult>(string url, object? body = null, CancellationToken cancellationToken = default) where TResult : class
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException("Url should not be empty or null", nameof(url));
 
-            var httpResponseMessage = await _httpClient.PostAsync(url, body == null ? null : new ByteArrayContent(_contentSerializer.Serialize(body)));
+            var httpResponseMessage = await _httpClient.PostAsync(url, body == null ? null : new ByteArrayContent(_contentSerializer.Serialize(body)), cancellationToken);
 
             return await DeserializeResponseMessageAsync<TResult>(httpResponseMessage);
         }
 
-        public async Task<TResult> PutAsync<TResult>(string url, object? body) where TResult : class
+        public async Task<TResult> PutAsync<TResult>(string url, object? body, CancellationToken cancellationToken = default) where TResult : class
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException("Url should not be empty or null", nameof(url));
             
-            var httpResponseMessage = await _httpClient.PutAsync(url, body == null ? null : new ByteArrayContent(_contentSerializer.Serialize(body)));
+            var httpResponseMessage = await _httpClient.PutAsync(url, body == null ? null : new ByteArrayContent(_contentSerializer.Serialize(body)), cancellationToken);
 
             return await DeserializeResponseMessageAsync<TResult>(httpResponseMessage);
         }
         
-        public async Task<TResult> PatchAsync<TResult>(string url, object? body) where TResult : class
+        public async Task<TResult> PatchAsync<TResult>(string url, object? body, CancellationToken cancellationToken = default) where TResult : class
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException("Url should not be empty or null", nameof(url));
             
-            var httpResponseMessage = await _httpClient.PatchAsync(url, body == null ? null : new ByteArrayContent(_contentSerializer.Serialize(body)));
+            var httpResponseMessage = await _httpClient.PatchAsync(url, body == null ? null : new ByteArrayContent(_contentSerializer.Serialize(body)), cancellationToken);
 
             return await DeserializeResponseMessageAsync<TResult>(httpResponseMessage);
         }
 
-        public async Task<TResult> DeleteAsync<TResult>(string url) where TResult : class
+        public async Task<TResult> DeleteAsync<TResult>(string url, CancellationToken cancellationToken = default) where TResult : class
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException("Url should not be empty or null", nameof(url));
             
-            var httpResponseMessage = await _httpClient.DeleteAsync(url);
+            var httpResponseMessage = await _httpClient.DeleteAsync(url, cancellationToken);
 
             return await DeserializeResponseMessageAsync<TResult>(httpResponseMessage);
         }

@@ -2,8 +2,10 @@
 
 namespace Poster
 {
+    using System.Threading;
     using System.Threading.Tasks;
     using Core;
+    using Core.Attributes;
 
     class Program
     {
@@ -11,7 +13,11 @@ namespace Poster
         {
             var poster = new Poster();
             var userService = poster.BuildService<IUserService>();
-            await userService.CreateUser();
+            var ts = new CancellationTokenSource();
+            await userService.CreateUser(new User
+            {
+                Name = "as"
+            });
             // var r = await userService.GetUserAsync("oleh", 1);
             
             Console.ReadLine();
@@ -23,16 +29,8 @@ namespace Poster
         // [Get("http://localhost:5000/auth/test/{name}?id={id}")]
         // public Task<User> GetUserAsync(string name, int id);
 
-        [Post("http://localhost:5000/auth/create")]
-        public Task CreateUser();
-    }
-
-    public class PostAttribute : Attribute
-    {
-        public PostAttribute(string httpLocalhostAuthCreate)
-        {
-            throw new NotImplementedException();
-        }
+        [Get("http://localhost:5000/auth/create")]
+        public Task CreateUser([Body]User user);
     }
 
     public class User
