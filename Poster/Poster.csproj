@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>9</LangVersion>
+        <RootNamespace>Poster.Core</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+        <HintPath>..\..\moq4\src\Moq\bin\Castle.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Moq, Version=4.15.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920">
+        <HintPath>..\..\moq4\src\Moq\bin\Moq.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Poster.Core\Poster.Core.csproj" />
+      <ProjectReference Include="..\Poster.Http\Poster.Http.csproj" />
+    </ItemGroup>
+
+</Project>
