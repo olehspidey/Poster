@@ -4,7 +4,7 @@ namespace Poster.Core.Attributes.Abstract
 
     public class HttpAttribute : Attribute
     {
-        public HttpAttribute(string url)
+        internal HttpAttribute(string url)
         {
             Url = url;
         }

@@ -2,9 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poster.Example", "Poster.Example\Poster.Example.csproj", "{B8EB871C-7BBE-4BD6-B5B0-8B88CB1A861D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poster.Core", "Poster.Core\Poster.Core.csproj", "{62228187-8A2F-4B50-B690-7F2F0EB645CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poster", "Poster\Poster.csproj", "{62228187-8A2F-4B50-B690-7F2F0EB645CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poster.Http", "Poster.Http\Poster.Http.csproj", "{F3AD8946-DB86-4057-8DE4-B4864F6DA67F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poster.Core", "Poster.Core\Poster.Core.csproj", "{E3CA2135-6500-42CD-ACF7-981B785758C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +26,9 @@ Global
 		{F3AD8946-DB86-4057-8DE4-B4864F6DA67F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3AD8946-DB86-4057-8DE4-B4864F6DA67F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3AD8946-DB86-4057-8DE4-B4864F6DA67F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3CA2135-6500-42CD-ACF7-981B785758C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3CA2135-6500-42CD-ACF7-981B785758C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3CA2135-6500-42CD-ACF7-981B785758C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3CA2135-6500-42CD-ACF7-981B785758C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
