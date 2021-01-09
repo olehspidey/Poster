@@ -8,6 +8,7 @@ namespace Poster.Core.Expressions
     using System.Reflection;
     using System.Threading;
     using Abstract;
+    using Abstraction;
     using Attributes;
     using Attributes.Abstract;
     using Exceptions;
@@ -32,7 +33,7 @@ namespace Poster.Core.Expressions
 
         public HttpClientExpressionBuilder(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer)
         {
-            _httpClient = new PosterHttpClient(httpClientFactory, contentSerializer);
+            _httpClient = new PosterHttpClient(httpClientFactory, contentSerializer, nameof(IPoster));
             _urlBuilder = new UrlBuilder();
             
             var httpClientType = _httpClient.GetType();

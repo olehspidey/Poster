@@ -1,10 +1,11 @@
 namespace Poster.Core
 {
     using System.Net.Http;
+    using Abstraction;
     using Http.Serializers.Abstract;
     using Reflection;
 
-    public class Poster
+    public class Poster : IPoster
     {
         private readonly DynamicTypeBuilder _typeBuilder;
         
