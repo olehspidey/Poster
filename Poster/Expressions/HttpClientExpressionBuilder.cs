@@ -87,55 +87,54 @@ namespace Poster.Core.Expressions
 
         private LambdaExpression GetExpressionForBodilessRequest(HttpAttribute httpAttribute, Type returnType, ParameterInfo[] parameters)
         {
-            var parameterConstructor = typeof(Parameter).GetConstructors().First();
             var parameterExpressions = parameters
                 .Select(p => (Expression.Parameter(p.ParameterType, p.Name), p))
                 .ToArray();
-            var cancellationTokenParameter = GetCancellationTokenParameter(parameters);
-            var cancellationTokenParameterExpression = cancellationTokenParameter == null
-                ? (Expression) Expression.Default(typeof(CancellationToken))
-                : parameterExpressions
-                    .Select(pe => pe.Item1)
-                    .First(pe => pe.Name == cancellationTokenParameter.Name && pe.Type == cancellationTokenParameter.ParameterType);
-            var newParametersExpression = parameterExpressions
-                .Select(pe => Expression.New(parameterConstructor, Expression.Constant(pe.Item1.Name), pe.Item1.GetStringValueExpression()));
-            var arrayInitExpression = Expression.NewArrayInit(typeof(Parameter), newParametersExpression);
-            var callUrlBuildExpression = Expression.Call(
-                Expression.Constant(_urlBuilder),
-                _urlBuilder.GetBuildUrlMethodInfo(),
-                Expression.Constant(httpAttribute.Url),
-                arrayInitExpression);
-            var callExpression = Expression.Call(
-                Expression.Constant(_httpClient),
-                GetMethodByRequestType(httpAttribute)
-                    .MakeGenericMethod(returnType),
-                callUrlBuildExpression,
-                cancellationTokenParameterExpression);
-            var lambda = Expression.Lambda(callExpression, parameterExpressions.Select(pe => pe.Item1));
 
-            return lambda;
+            return GetExpressionForRequest(
+                httpAttribute,
+                returnType,
+                parameters,
+                parameterExpressions,
+                null);
         }
 
         private LambdaExpression GetExpressionForBodyRequest(HttpAttribute httpAttribute, Type returnType, ParameterInfo[] parameters)
         {
-            var parameterConstructor = typeof(Parameter).GetConstructors().First();
             var parameterExpressions = parameters
                 .Select(p => (Expression.Parameter(p.ParameterType, p.Name), p))
-                .ToList();
+                .ToArray();
             var bodyParameter = GetBodyParameter(parameters);
-            var cancellationTokenParameter = GetCancellationTokenParameter(parameters);
             var bodyParameterExpression = bodyParameter == null
                 ? (Expression) Expression.Constant(null)
                 : parameterExpressions
                     .Select(pe => pe.Item1)
                     .First(pe => pe.Name == bodyParameter.Name && pe.Type == bodyParameter.ParameterType);
+            
+            return GetExpressionForRequest(
+                httpAttribute,
+                returnType,
+                parameters,
+                parameterExpressions,
+                bodyParameterExpression);        
+        }
+
+        private LambdaExpression GetExpressionForRequest(
+            HttpAttribute httpAttribute,
+            Type returnType,
+            ParameterInfo[] parameters,
+            (ParameterExpression, ParameterInfo)[] parameterExpressions,
+            Expression? bodyParameterExpression)
+        {
+            var parameterConstructor = typeof(Parameter).GetConstructors().First();
+            var cancellationTokenParameter = GetCancellationTokenParameter(parameters);
             var cancellationTokenParameterExpression = cancellationTokenParameter == null
                 ? (Expression) Expression.Default(typeof(CancellationToken))
                 : parameterExpressions
                     .Select(pe => pe.Item1)
                     .First(pe => pe.Name == cancellationTokenParameter.Name && pe.Type == cancellationTokenParameter.ParameterType);           
             var newParametersExpression = parameterExpressions
-                .Where(p => p.p.GetCustomAttribute<BodyAttribute>() == null && p.p.ParameterType != typeof(CancellationToken))
+                .Where(p => p.Item2.GetCustomAttribute<BodyAttribute>() == null && p.Item2.ParameterType != typeof(CancellationToken))
                 .Select(pe => Expression.New(parameterConstructor, Expression.Constant(pe.Item1.Name), pe.Item1.GetStringValueExpression()));
             var arrayInitExpression = Expression.NewArrayInit(typeof(Parameter), newParametersExpression);
             var callUrlBuildExpression = Expression.Call(
@@ -143,17 +142,16 @@ namespace Poster.Core.Expressions
                 _urlBuilder.GetBuildUrlMethodInfo(),
                 Expression.Constant(httpAttribute.Url),
                 arrayInitExpression);
+            var urlBuilderParameterExpression = new List<Expression?> {callUrlBuildExpression, bodyParameterExpression, cancellationTokenParameterExpression};
             
             var callHttpClientMethodExpression = Expression.Call(
                 Expression.Constant(_httpClient),
                 GetMethodByRequestType(httpAttribute)
                     .MakeGenericMethod(returnType),
-                callUrlBuildExpression,
-                bodyParameterExpression,
-                cancellationTokenParameterExpression);
+                urlBuilderParameterExpression.Where(pe => pe != null));
             var lambda = Expression.Lambda(callHttpClientMethodExpression, parameterExpressions.Select(pe => pe.Item1));
 
-            return lambda;        
+            return lambda;
         }
 
         private MethodInfo GetMethodByRequestType(HttpAttribute httpAttribute)

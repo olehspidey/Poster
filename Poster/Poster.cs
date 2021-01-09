@@ -1,16 +1,16 @@
 namespace Poster.Core
 {
     using System.Net.Http;
-    using Http.Serializers;
+    using Http.Serializers.Abstract;
     using Reflection;
 
     public class Poster
     {
         private readonly DynamicTypeBuilder _typeBuilder;
-
-        public Poster()
+        
+        internal Poster(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer)
         {
-            _typeBuilder = new DynamicTypeBuilder(new HttpClientFactory(), new JsonContentSerializer());
+            _typeBuilder = new DynamicTypeBuilder(httpClientFactory, contentSerializer);
         }
 
         public TService BuildService<TService>() where TService : class
@@ -18,14 +18,6 @@ namespace Poster.Core
             var serviceInstance = _typeBuilder.GetInstance<TService>();
             
             return serviceInstance;
-        }
-    }
-
-    public class HttpClientFactory : IHttpClientFactory
-    {
-        public HttpClient CreateClient(string name)
-        {
-            return new HttpClient();
         }
     }
 }

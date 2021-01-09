@@ -11,13 +11,14 @@ namespace Poster
     {
         static async Task Main(string[] args)
         {
-            var poster = new Poster();
+            var poster = new PosterBuilder()
+                .Build();
             var userService = poster.BuildService<IUserService>();
             var ts = new CancellationTokenSource();
             await userService.CreateUser(new User
             {
                 Name = "as"
-            });
+            }, 10, ts.Token);
             // var r = await userService.GetUserAsync("oleh", 1);
             
             Console.ReadLine();
@@ -29,8 +30,8 @@ namespace Poster
         // [Get("http://localhost:5000/auth/test/{name}?id={id}")]
         // public Task<User> GetUserAsync(string name, int id);
 
-        [Get("http://localhost:5000/auth/create")]
-        public Task CreateUser([Body]User user);
+        [Post("http://localhost:5000/auth/create/{id}")]
+        public Task CreateUser([Body]User user, int id, CancellationToken cancellationToken);
     }
 
     public class User
