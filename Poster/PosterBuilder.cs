@@ -2,8 +2,9 @@ namespace Poster
 {
     using System;
     using System.Net.Http;
-    using global::Poster.Http.Serializers;
-    using global::Poster.Http.Serializers.Abstract;
+    using Http.Clients.Abstract;
+    using Http.Serializers;
+    using Http.Serializers.Abstract;
 
     /// <summary>
     /// Represents class that is responsible for <see cref="Poster"/> building.
@@ -12,6 +13,7 @@ namespace Poster
     {
         private IHttpClientFactory? _httpClientFactory;
         private IContentSerializer? _contentSerializer;
+        private IHttpClient? _httpClient;
 
         /// <summary>
         /// Adds <see cref="IHttpClientFactory"/> that will be used for <see cref="HttpClient"/> building.
@@ -38,12 +40,24 @@ namespace Poster
         }
 
         /// <summary>
+        /// Adds <see cref="IHttpClient"/> that will be used from http requests execution.
+        /// </summary>
+        /// <param name="httpClient">Http client.</param>
+        /// <returns><see cref="PosterBuilder"/>.</returns>
+        public PosterBuilder AddHttpClient(IHttpClient httpClient)
+        {
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+
+            return this;
+        }
+
+        /// <summary>
         /// Builds new instance of <see cref="Poster"/>.
         /// </summary>
         /// <returns>New instance of <see cref="Poster"/>.</returns>
         public Poster Build()
         {
-            return new(_httpClientFactory ?? new HttpClientFactory(), _contentSerializer ?? new JsonContentSerializer());
+            return new(_httpClientFactory ?? new HttpClientFactory(), _contentSerializer ?? new JsonContentSerializer(), _httpClient);
         }
     }
 }

@@ -39,9 +39,13 @@ namespace Poster.Expressions
         /// </summary>
         /// <param name="httpClientFactory">Http client factory that will use for <see cref="HttpClient"/> building.</param>
         /// <param name="contentSerializer"><see cref="IContentSerializer"/> that will be used for http content serialization.</param>
-        public HttpClientExpressionBuilder(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer)
+        /// <param name="httpClient">Http client.</param>
+        public HttpClientExpressionBuilder(
+            IHttpClientFactory httpClientFactory,
+            IContentSerializer contentSerializer,
+            IHttpClient? httpClient = null)
         {
-            _httpClient = new PosterHttpClient(httpClientFactory, contentSerializer, nameof(IPoster));
+            _httpClient = httpClient ?? new PosterHttpClient(httpClientFactory, contentSerializer, nameof(IPoster));
             _urlBuilder = new UrlBuilder();
 
             var httpClientType = _httpClient.GetType();

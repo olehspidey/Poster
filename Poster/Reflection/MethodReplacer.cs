@@ -11,6 +11,7 @@ namespace Poster.Reflection
     using Exceptions;
     using Expressions;
     using Expressions.Abstract;
+    using Http.Clients.Abstract;
     using Http.Serializers.Abstract;
     using Moq;
 
@@ -27,10 +28,14 @@ namespace Poster.Reflection
         /// </summary>
         /// <param name="httpClientFactory">Http client factory that will use for <see cref="HttpClient"/> building.</param>
         /// <param name="contentSerializer"><see cref="IContentSerializer"/> that will be used for http content serialization.</param>
-        public MethodReplacer(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer)
+        /// <param name="httpClient">Http client.</param>
+        public MethodReplacer(
+            IHttpClientFactory httpClientFactory,
+            IContentSerializer contentSerializer,
+            IHttpClient? httpClient = null)
         {
             _mockExpressionBuilder = new MockExpressionBuilder();
-            _httpClientExpressionBuilder = new HttpClientExpressionBuilder(httpClientFactory, contentSerializer);
+            _httpClientExpressionBuilder = new HttpClientExpressionBuilder(httpClientFactory, contentSerializer, httpClient);
         }
 
         /// <inheritdoc/>

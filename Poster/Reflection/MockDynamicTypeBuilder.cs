@@ -2,6 +2,7 @@ namespace Poster.Reflection
 {
     using System.Net.Http;
     using Abstract;
+    using Http.Clients.Abstract;
     using Http.Serializers.Abstract;
     using Moq;
 
@@ -17,9 +18,13 @@ namespace Poster.Reflection
         /// </summary>
         /// <param name="httpClientFactory"><see cref="IHttpClientFactory"/> that will be used for <see cref="HttpClient"/> building.</param>
         /// <param name="contentSerializer"><see cref="IContentSerializer"/> that will be used for http content serialization.</param>
-        public MockDynamicTypeBuilder(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer)
+        /// <param name="httpClient">Http client.</param>
+        public MockDynamicTypeBuilder(
+            IHttpClientFactory httpClientFactory,
+            IContentSerializer contentSerializer,
+            IHttpClient? httpClient = null)
         {
-            _methodReplacer = new MethodReplacer(httpClientFactory, contentSerializer);
+            _methodReplacer = new MethodReplacer(httpClientFactory, contentSerializer, httpClient);
         }
 
         /// <inheritdoc/>
@@ -27,8 +32,9 @@ namespace Poster.Reflection
             where T : class
         {
             var mock = new Mock<T>();
+            var methods = typeof(T).GetMethods();
 
-            _methodReplacer.ReplaceMethodsBodies(typeof(T).GetMethods(), mock);
+            _methodReplacer.ReplaceMethodsBodies(methods, mock);
 
             return mock.Object;
         }

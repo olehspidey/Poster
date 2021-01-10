@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poster.Core", "Poster.Core\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poster.DependencyInjection", "Poster.DependencyInjection\Poster.DependencyInjection.csproj", "{054EF4A4-5A7E-4462-AB35-D36746B7CE51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poster.Tests", "Poster.Tests\Poster.Tests.csproj", "{8D66160C-750E-42BA-905D-82C210D99743}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{054EF4A4-5A7E-4462-AB35-D36746B7CE51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{054EF4A4-5A7E-4462-AB35-D36746B7CE51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{054EF4A4-5A7E-4462-AB35-D36746B7CE51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D66160C-750E-42BA-905D-82C210D99743}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D66160C-750E-42BA-905D-82C210D99743}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D66160C-750E-42BA-905D-82C210D99743}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D66160C-750E-42BA-905D-82C210D99743}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -2,7 +2,8 @@ namespace Poster
 {
     using System.Net.Http;
     using Abstraction;
-    using global::Poster.Http.Serializers.Abstract;
+    using Http.Clients.Abstract;
+    using Http.Serializers.Abstract;
     using Reflection;
     using Reflection.Abstract;
 
@@ -18,9 +19,13 @@ namespace Poster
         /// </summary>
         /// <param name="httpClientFactory">Http client factory.</param>
         /// <param name="contentSerializer">Content serializer.</param>
-        internal Poster(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer)
+        /// <param name="httpClient">Http client.</param>
+        internal Poster(
+            IHttpClientFactory httpClientFactory,
+            IContentSerializer contentSerializer,
+            IHttpClient? httpClient = null)
         {
-            _typeBuilder = new MockDynamicTypeBuilder(httpClientFactory, contentSerializer);
+            _typeBuilder = new MockDynamicTypeBuilder(httpClientFactory, contentSerializer, httpClient);
         }
 
         /// <summary>
