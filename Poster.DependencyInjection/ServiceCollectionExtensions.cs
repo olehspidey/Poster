@@ -2,6 +2,7 @@ namespace Poster.DependencyInjection
 {
     using System;
     using System.Net.Http;
+    using Abstract;
     using Core;
     using Core.Abstraction;
     using Http.Serializers.Abstract;
@@ -9,11 +10,11 @@ namespace Poster.DependencyInjection
 
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddPoster(this IServiceCollection serviceCollection, Func<PosterBuilder, Poster> posterBuilderFactory)
+        public static IServiceCollectionBuilder AddPoster(this IServiceCollection serviceCollection, Func<PosterBuilder, Poster> posterBuilderFactory)
         {
             var posterBuilder = new PosterBuilder();
 
-            serviceCollection.AddScoped<IPoster, Poster>(provider =>
+            serviceCollection.AddSingleton<IPoster, Poster>(provider =>
             {
                 var httpClientFactory = provider.GetService<IHttpClientFactory>();
                 var contentSerializer = provider.GetService<IContentSerializer>();
@@ -28,10 +29,14 @@ namespace Poster.DependencyInjection
                 return posterBuilderFactory(posterBuilder);
             });
 
-            return serviceCollection;
+            return new DefaultServiceCollectionBuilder(serviceCollection);
         }
 
-        public static IServiceCollection AddPoster(this IServiceCollection serviceCollection)
-            => serviceCollection.AddScoped<IPoster, Poster>(_ => new PosterBuilder().Build());
+        public static IServiceCollectionBuilder AddPoster(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton<IPoster, Poster>(_ => new PosterBuilder().Build());
+
+            return new DefaultServiceCollectionBuilder(serviceCollection);
+        }
     }
 }

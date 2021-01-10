@@ -2,6 +2,7 @@
 
 namespace Poster
 {
+    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using Core.Abstraction;
@@ -19,13 +20,11 @@ namespace Poster
             {
                 client.DefaultRequestHeaders.Add("test", "test");
             });
-            serviceCollection.AddPoster(builder => builder.Build());
+            serviceCollection.AddPoster(builder => builder.Build()).AddAllServices(Assembly.GetExecutingAssembly());
 
             var provider = serviceCollection.BuildServiceProvider();
 
-            var poster = provider.GetRequiredService<IPoster>();
-            
-            var userService = poster.BuildService<IUserService>();
+            var userService = provider.GetRequiredService<IUserService>();
             var ts = new CancellationTokenSource();
             await userService.CreateUser(new User
             {
@@ -37,6 +36,7 @@ namespace Poster
         }
     }
 
+    [HttpService]
     public interface IUserService
     {
         // [Get("http://localhost:5000/auth/test/{name}?id={id}")]

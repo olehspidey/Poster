@@ -5,6 +5,7 @@ namespace Poster.Core.Expressions
     using System.Linq.Expressions;
     using System.Reflection;
     using Abstract;
+    using Exceptions;
     using Moq;
 
     public class MockExpressionBuilder : IMockExpressionBuilder
@@ -12,6 +13,9 @@ namespace Poster.Core.Expressions
         public LambdaExpression GetSetupExpression(MethodInfo method, ParameterInfo[]? parameters = null)
         {
             parameters ??= method.GetParameters();
+
+            if (method.DeclaringType == null)
+                throw new ServiceInitializeException("Service method should have declaring type");
             
             var parameter = Expression.Parameter(method.DeclaringType);
             var arguments = parameters

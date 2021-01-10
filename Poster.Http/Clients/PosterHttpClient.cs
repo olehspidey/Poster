@@ -14,17 +14,17 @@ namespace Poster.Http.Clients
         private readonly HttpClient _httpClient;
         private readonly IContentSerializer _contentSerializer;
 
-        public PosterHttpClient(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer)
+        public PosterHttpClient(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer, string httpClientName)
         {
             _contentSerializer = contentSerializer;
-            _httpClient = httpClientFactory.CreateClient("test");
+            _httpClient = httpClientFactory.CreateClient(httpClientName);
         }
 
         public async Task<TResult> GetAsync<TResult>(string url, CancellationToken cancellationToken = default) where TResult : class
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException("Url should not be empty or null", nameof(url));
-
+            
             var httpResponseMessage = await _httpClient.GetAsync(url, cancellationToken);
 
             return await DeserializeResponseMessageAsync<TResult>(httpResponseMessage);
