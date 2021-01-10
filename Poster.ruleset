@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RuleSet Name="BorsaLive" ToolsVersion="1.0">
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+        <Rule Id="SA1101" Action="Hidden"/>
+        <Rule Id="SA1633" Action="Hidden"/>
+        <Rule Id="SA1309" Action="Hidden"/>
+        <Rule Id="SA1000" Action="Hidden"/>
+        <Rule Id="SA1503" Action="Hidden"/>
+<!--        <Rule Id="SA1413" Action="Hidden"/>-->
+<!--        <Rule Id="SA1519" Action="Hidden"/>-->
+        <Rule Id="SA1135" Action="Hidden"/>
+<!--        <Rule Id="CS1591" Action="Hidden"/>-->
+    </Rules>
+</RuleSet>

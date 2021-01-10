@@ -5,11 +5,5 @@ namespace Poster.Core.Attributes
     [AttributeUsage(AttributeTargets.Interface)]
     public class HttpServiceAttribute : Attribute
     {
-        public HttpServiceAttribute(string? baseUrl = null)
-        {
-            BaseUrl = baseUrl;
-        }
-
-        public string? BaseUrl { get; }
     }
 }

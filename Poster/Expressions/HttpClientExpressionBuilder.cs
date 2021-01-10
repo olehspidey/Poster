@@ -37,12 +37,17 @@ namespace Poster.Core.Expressions
             _urlBuilder = new UrlBuilder();
             
             var httpClientType = _httpClient.GetType();
-            
-            _httpClientGetMethod = httpClientType.GetMethod(nameof(IHttpClient.GetAsync)) ?? throw new Exception("");
-            _httpClientPostMethod = httpClientType.GetMethod(nameof(IHttpClient.PostAsync)) ?? throw new Exception("");
-            _httpClientPutMethod = httpClientType.GetMethod(nameof(IHttpClient.PutAsync)) ?? throw new Exception("");
-            _httpClientDeleteMethod = httpClientType.GetMethod(nameof(IHttpClient.DeleteAsync)) ?? throw new Exception("");
-            _httpClientPatchMethod = httpClientType.GetMethod(nameof(IHttpClient.PatchAsync)) ?? throw new Exception("");
+
+            _httpClientGetMethod = httpClientType.GetMethod(nameof(IHttpClient.GetAsync)) ??
+                                   throw new Exception($"{nameof(IHttpClient)} doesn't contain {nameof(IHttpClient.GetAsync)} method");
+            _httpClientPostMethod = httpClientType.GetMethod(nameof(IHttpClient.PostAsync)) ??
+                                    throw new Exception($"{nameof(IHttpClient)} doesn't contain {nameof(IHttpClient.PostAsync)} method");
+            _httpClientPutMethod = httpClientType.GetMethod(nameof(IHttpClient.PutAsync)) ??
+                                   throw new Exception($"{nameof(IHttpClient)} doesn't contain {nameof(IHttpClient.PutAsync)} method");
+            _httpClientDeleteMethod = httpClientType.GetMethod(nameof(IHttpClient.DeleteAsync)) ??
+                                      throw new Exception($"{nameof(IHttpClient)} doesn't contain {nameof(IHttpClient.DeleteAsync)} method");
+            _httpClientPatchMethod = httpClientType.GetMethod(nameof(IHttpClient.PatchAsync)) ??
+                                     throw new Exception($"{nameof(IHttpClient)} doesn't contain {nameof(IHttpClient.PatchAsync)} method");
         }
 
         public LambdaExpression GetExpressionForGenericTask(MethodInfo serviceMethod)
