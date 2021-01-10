@@ -141,7 +141,7 @@ namespace Poster.Core.Expressions
             (ParameterExpression, ParameterInfo)[] parameterExpressions,
             Expression? bodyParameterExpression)
         {
-            var parameterConstructor = typeof(Parameter).GetConstructors().First();
+            var parameterConstructor = typeof(UrlParameter).GetConstructors().First();
             var cancellationTokenParameter = GetCancellationTokenParameter(parameters);
             var cancellationTokenParameterExpression = cancellationTokenParameter == null
                 ? (Expression)Expression.Default(typeof(CancellationToken))
@@ -151,7 +151,7 @@ namespace Poster.Core.Expressions
             var newParametersExpression = parameterExpressions
                 .Where(p => p.Item2.GetCustomAttribute<BodyAttribute>() == null && p.Item2.ParameterType != typeof(CancellationToken))
                 .Select(pe => Expression.New(parameterConstructor, Expression.Constant(pe.Item1.Name), pe.Item1.GetStringValueExpression()));
-            var arrayInitExpression = Expression.NewArrayInit(typeof(Parameter), newParametersExpression);
+            var arrayInitExpression = Expression.NewArrayInit(typeof(UrlParameter), newParametersExpression);
             var callUrlBuildExpression = Expression.Call(
                 Expression.Constant(_urlBuilder),
                 _urlBuilder.GetBuildUrlMethodInfo(),

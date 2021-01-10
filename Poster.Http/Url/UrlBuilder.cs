@@ -4,9 +4,13 @@ namespace Poster.Http.Url
     using Abstract;
     using Models;
 
+    /// <summary>
+    /// Represents url builder that builds url with parameters.
+    /// </summary>
     public class UrlBuilder : IUrlBuilder
     {
-        public string BuildUrl(string url, IEnumerable<Parameter> parameters)
+        /// <inheritdoc/>
+        public string BuildUrl(string url, IEnumerable<UrlParameter> parameters)
         {
             foreach (var parameter in parameters)
             {
