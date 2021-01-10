@@ -1,4 +1,4 @@
-namespace Poster.Core.Reflection
+namespace Poster.Reflection
 {
     using System.Net.Http;
     using Abstract;

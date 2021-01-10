@@ -1,4 +1,4 @@
-namespace Poster.Core.Expressions
+namespace Poster.Expressions
 {
     using System;
     using System.Linq;

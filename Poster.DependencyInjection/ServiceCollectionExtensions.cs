@@ -3,14 +3,22 @@ namespace Poster.DependencyInjection
     using System;
     using System.Net.Http;
     using Abstract;
-    using Core;
-    using Core.Abstraction;
+    using Abstraction;
     using Http.Serializers.Abstract;
     using Microsoft.Extensions.DependencyInjection;
 
+    /// <summary>
+    /// Represents class with <see cref="IServiceCollection"/> extensions.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollectionBuilder AddPoster(this IServiceCollection serviceCollection, Func<PosterBuilder, Poster> posterBuilderFactory)
+        /// <summary>
+        /// Adds <see cref="Poster"/> object to <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="serviceCollection">The application service collection.</param>
+        /// <param name="posterBuilderFactory">Factory of <see cref="PosterBuilder"/>.</param>
+        /// <returns><see cref="IDiPosterBuilder"/>.</returns>
+        public static IDiPosterBuilder AddPoster(this IServiceCollection serviceCollection, Func<PosterBuilder, Poster> posterBuilderFactory)
         {
             var posterBuilder = new PosterBuilder();
 
@@ -22,21 +30,25 @@ namespace Poster.DependencyInjection
                 if (httpClientFactory != null)
                     posterBuilder.AddHttpClientFactory(httpClientFactory);
 
-
                 if (contentSerializer != null)
                     posterBuilder.AddContentSerializer(contentSerializer);
 
                 return posterBuilderFactory(posterBuilder);
             });
 
-            return new DefaultServiceCollectionBuilder(serviceCollection);
+            return new DefaultDiPosterBuilder(serviceCollection);
         }
 
-        public static IServiceCollectionBuilder AddPoster(this IServiceCollection serviceCollection)
+        /// <summary>
+        /// Adds <see cref="Poster"/> object to <see cref="IServiceCollection"/> with default Poster build factory.
+        /// </summary>
+        /// <param name="serviceCollection">The application service collection.</param>
+        /// <returns><see cref="IDiPosterBuilder"/>.</returns>
+        public static IDiPosterBuilder AddPoster(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IPoster, Poster>(_ => new PosterBuilder().Build());
 
-            return new DefaultServiceCollectionBuilder(serviceCollection);
+            return new DefaultDiPosterBuilder(serviceCollection);
         }
     }
 }

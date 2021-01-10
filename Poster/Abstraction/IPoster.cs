@@ -1,4 +1,4 @@
-namespace Poster.Core.Abstraction
+namespace Poster.Abstraction
 {
     /// <summary>
     /// Represents Poster main interface that is responsible for http services building.

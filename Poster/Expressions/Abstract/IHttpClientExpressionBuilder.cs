@@ -1,4 +1,4 @@
-namespace Poster.Core.Expressions.Abstract
+namespace Poster.Expressions.Abstract
 {
     using System.Linq.Expressions;
     using System.Reflection;

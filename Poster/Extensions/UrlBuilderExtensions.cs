@@ -1,4 +1,4 @@
-namespace Poster.Core.Extensions
+namespace Poster.Extensions
 {
     using System;
     using System.Reflection;

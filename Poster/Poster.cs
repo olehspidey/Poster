@@ -1,8 +1,8 @@
-namespace Poster.Core
+namespace Poster
 {
     using System.Net.Http;
     using Abstraction;
-    using Http.Serializers.Abstract;
+    using global::Poster.Http.Serializers.Abstract;
     using Reflection;
     using Reflection.Abstract;
 

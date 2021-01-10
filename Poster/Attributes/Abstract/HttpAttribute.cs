@@ -1,4 +1,4 @@
-namespace Poster.Core.Attributes.Abstract
+namespace Poster.Attributes.Abstract
 {
     using System;
 

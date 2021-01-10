@@ -1,4 +1,4 @@
-namespace Poster.Core.Expressions
+namespace Poster.Expressions
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +11,7 @@ namespace Poster.Core.Expressions
     using Abstraction;
     using Attributes;
     using Attributes.Abstract;
+    using Core.Types;
     using Exceptions;
     using Extensions;
     using Http.Clients;
@@ -19,7 +20,6 @@ namespace Poster.Core.Expressions
     using Http.Serializers.Abstract;
     using Http.Url;
     using Http.Url.Abstract;
-    using Types;
 
     /// <summary>
     /// Represents expression builder that can build expression for <see cref="Http.Clients.Abstract.IHttpClient"/> method invocation.

@@ -1,4 +1,4 @@
-namespace Poster.Core.Reflection.Abstract
+namespace Poster.Reflection.Abstract
 {
     /// <summary>
     /// Type builder abstraction that can create new instance of http service.

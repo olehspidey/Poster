@@ -1,4 +1,4 @@
-namespace Poster.Core.Reflection.Abstract
+namespace Poster.Reflection.Abstract
 {
     using System.Collections.Generic;
     using System.Reflection;

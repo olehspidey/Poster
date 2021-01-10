@@ -5,8 +5,8 @@ namespace Poster
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
-    using Core.Abstraction;
-    using Core.Attributes;
+    using Abstraction;
+    using Attributes;
     using DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
 

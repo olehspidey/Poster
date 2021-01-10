@@ -1,4 +1,4 @@
-namespace Poster.Core.Exceptions
+namespace Poster.Exceptions
 {
     using System;
 

@@ -1,4 +1,4 @@
-namespace Poster.Core.Reflection
+namespace Poster.Reflection
 {
     using System;
     using System.Collections.Generic;
@@ -7,12 +7,12 @@ namespace Poster.Core.Reflection
     using System.Reflection;
     using System.Threading.Tasks;
     using Abstract;
+    using Core.Types;
     using Exceptions;
     using Expressions;
     using Expressions.Abstract;
     using Http.Serializers.Abstract;
     using Moq;
-    using Types;
 
     /// <summary>
     /// Represents implementation of <see cref="IMethodReplacer"/> that works with <see cref="Mock"/> object.

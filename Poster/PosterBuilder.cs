@@ -1,9 +1,9 @@
-namespace Poster.Core
+namespace Poster
 {
     using System;
     using System.Net.Http;
-    using Http.Serializers;
-    using Http.Serializers.Abstract;
+    using global::Poster.Http.Serializers;
+    using global::Poster.Http.Serializers.Abstract;
 
     /// <summary>
     /// Represents class that is responsible for <see cref="Poster"/> building.

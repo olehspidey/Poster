@@ -6,20 +6,29 @@ namespace Poster.DependencyInjection
     using System.Linq.Expressions;
     using System.Reflection;
     using Abstract;
-    using Core.Abstraction;
-    using Core.Attributes;
+    using Abstraction;
+    using Attributes;
     using Microsoft.Extensions.DependencyInjection;
 
-    internal class DefaultServiceCollectionBuilder : IServiceCollectionBuilder
+    /// <summary>
+    /// Represents default realization of <see cref="IDiPosterBuilder"/>.
+    /// </summary>
+    internal class DefaultDiPosterBuilder : IDiPosterBuilder
     {
-        public DefaultServiceCollectionBuilder(IServiceCollection serviceCollection)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultDiPosterBuilder"/> class.
+        /// </summary>
+        /// <param name="serviceCollection">The application service collection.</param>
+        public DefaultDiPosterBuilder(IServiceCollection serviceCollection)
         {
             Services = serviceCollection;
         }
 
+        /// <inheritdoc/>
         public IServiceCollection Services { get; }
 
-        public IServiceCollectionBuilder AddAllServices(Assembly assembly)
+        /// <inheritdoc/>
+        public IDiPosterBuilder AddAllServices(Assembly assembly)
         {
             var httServices = assembly
                 .GetTypes()
@@ -39,14 +48,15 @@ namespace Poster.DependencyInjection
                     callGetRequiredServiceExpression,
                     typeof(IPoster).GetMethod(nameof(IPoster.BuildService))?.MakeGenericMethod(httService) ?? throw new Exception($"Poster instance doesn't contain {nameof(IPoster.BuildService)} method"));
                 var callBuildServiceLambdaExpression = Expression.Lambda(Expression.Convert(callBuilderServiceExpression, typeof(object)), parameterExpression);
-                
+
                 Services.AddSingleton(httService, (Func<IServiceProvider, object>)callBuildServiceLambdaExpression.Compile());
             }
 
             return this;
         }
 
-        public IServiceCollectionBuilder AddAllServices(IEnumerable<Assembly> assemblies)
+        /// <inheritdoc/>
+        public IDiPosterBuilder AddAllServices(IEnumerable<Assembly> assemblies)
         {
             foreach (var assembly in assemblies)
             {

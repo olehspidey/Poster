@@ -1,4 +1,4 @@
-namespace Poster.Core
+namespace Poster
 {
     using System.Net.Http;
 
