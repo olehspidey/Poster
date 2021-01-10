@@ -8,15 +8,19 @@ namespace Poster.Core.Expressions
     using Exceptions;
     using Moq;
 
+    /// <summary>
+    /// Represents expression builder for <see cref="Moq.Mock"/> method invocation.
+    /// </summary>
     public class MockExpressionBuilder : IMockExpressionBuilder
     {
+        /// <inheritdoc/>
         public LambdaExpression GetSetupExpression(MethodInfo method, ParameterInfo[]? parameters = null)
         {
             parameters ??= method.GetParameters();
 
             if (method.DeclaringType == null)
                 throw new ServiceInitializeException("Service method should have declaring type");
-            
+
             var parameter = Expression.Parameter(method.DeclaringType);
             var arguments = parameters
                 .Select(p => Expression.Call(null, GetIsAnyMethodInfo().MakeGenericMethod(p.ParameterType)));
@@ -24,7 +28,7 @@ namespace Poster.Core.Expressions
 
             return lambdaExpression;
         }
-        
+
         private MethodInfo GetIsAnyMethodInfo()
         {
             var methodInfo = typeof(It).GetMethod(nameof(It.IsAny));

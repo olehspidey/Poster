@@ -16,6 +16,9 @@ namespace Poster.Core.Attributes.Abstract
             Url = url;
         }
 
+        /// <summary>
+        /// Gets http url.
+        /// </summary>
         public string Url { get; }
     }
 }

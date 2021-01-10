@@ -21,6 +21,9 @@ namespace Poster.Core.Expressions
     using Http.Url.Abstract;
     using Types;
 
+    /// <summary>
+    /// Represents expression builder that can build expression for <see cref="Http.Clients.Abstract.IHttpClient"/> method invocation.
+    /// </summary>
     public class HttpClientExpressionBuilder : IHttpClientExpressionBuilder
     {
         private readonly IHttpClient _httpClient;
@@ -31,11 +34,16 @@ namespace Poster.Core.Expressions
         private readonly MethodInfo _httpClientDeleteMethod;
         private readonly MethodInfo _httpClientPatchMethod;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpClientExpressionBuilder"/> class.
+        /// </summary>
+        /// <param name="httpClientFactory">Http client factory that will use for <see cref="HttpClient"/> building.</param>
+        /// <param name="contentSerializer"><see cref="IContentSerializer"/> that will be used for http content serialization.</param>
         public HttpClientExpressionBuilder(IHttpClientFactory httpClientFactory, IContentSerializer contentSerializer)
         {
             _httpClient = new PosterHttpClient(httpClientFactory, contentSerializer, nameof(IPoster));
             _urlBuilder = new UrlBuilder();
-            
+
             var httpClientType = _httpClient.GetType();
 
             _httpClientGetMethod = httpClientType.GetMethod(nameof(IHttpClient.GetAsync)) ??
@@ -50,19 +58,20 @@ namespace Poster.Core.Expressions
                                      throw new Exception($"{nameof(IHttpClient)} doesn't contain {nameof(IHttpClient.PatchAsync)} method");
         }
 
+        /// <inheritdoc/>
         public LambdaExpression GetExpressionForGenericTask(MethodInfo serviceMethod)
             => GetExpressionForTask(
                 serviceMethod.GetParameters(),
                 serviceMethod.ReturnType.GenericTypeArguments.First(),
                 serviceMethod.GetCustomAttributes());
 
+        /// <inheritdoc/>
         public LambdaExpression GetExpressionForNonGenericTask(MethodInfo serviceMethod)
             => GetExpressionForTask(
                 serviceMethod.GetParameters(),
                 typeof(Empty),
                 serviceMethod.GetCustomAttributes());
-        
-        
+
         private static ParameterInfo? GetBodyParameter(IEnumerable<ParameterInfo> parameterInfos)
             => parameterInfos.FirstOrDefault(p => p.GetCustomAttribute<BodyAttribute>() != null);
 
@@ -80,7 +89,7 @@ namespace Poster.Core.Expressions
                             httpAttribute,
                             taskGenericArgumentType,
                             parameters);
-                    
+
                     return GetExpressionForBodilessRequest(
                         httpAttribute,
                         taskGenericArgumentType,
@@ -112,17 +121,17 @@ namespace Poster.Core.Expressions
                 .ToArray();
             var bodyParameter = GetBodyParameter(parameters);
             var bodyParameterExpression = bodyParameter == null
-                ? (Expression) Expression.Constant(null)
+                ? (Expression)Expression.Constant(null)
                 : parameterExpressions
                     .Select(pe => pe.Item1)
                     .First(pe => pe.Name == bodyParameter.Name && pe.Type == bodyParameter.ParameterType);
-            
+
             return GetExpressionForRequest(
                 httpAttribute,
                 returnType,
                 parameters,
                 parameterExpressions,
-                bodyParameterExpression);        
+                bodyParameterExpression);
         }
 
         private LambdaExpression GetExpressionForRequest(
@@ -135,10 +144,10 @@ namespace Poster.Core.Expressions
             var parameterConstructor = typeof(Parameter).GetConstructors().First();
             var cancellationTokenParameter = GetCancellationTokenParameter(parameters);
             var cancellationTokenParameterExpression = cancellationTokenParameter == null
-                ? (Expression) Expression.Default(typeof(CancellationToken))
+                ? (Expression)Expression.Default(typeof(CancellationToken))
                 : parameterExpressions
                     .Select(pe => pe.Item1)
-                    .First(pe => pe.Name == cancellationTokenParameter.Name && pe.Type == cancellationTokenParameter.ParameterType);           
+                    .First(pe => pe.Name == cancellationTokenParameter.Name && pe.Type == cancellationTokenParameter.ParameterType);
             var newParametersExpression = parameterExpressions
                 .Where(p => p.Item2.GetCustomAttribute<BodyAttribute>() == null && p.Item2.ParameterType != typeof(CancellationToken))
                 .Select(pe => Expression.New(parameterConstructor, Expression.Constant(pe.Item1.Name), pe.Item1.GetStringValueExpression()));
@@ -148,8 +157,8 @@ namespace Poster.Core.Expressions
                 _urlBuilder.GetBuildUrlMethodInfo(),
                 Expression.Constant(httpAttribute.Url),
                 arrayInitExpression);
-            var urlBuilderParameterExpression = new List<Expression?> {callUrlBuildExpression, bodyParameterExpression, cancellationTokenParameterExpression};
-            
+            var urlBuilderParameterExpression = new List<Expression?> { callUrlBuildExpression, bodyParameterExpression, cancellationTokenParameterExpression };
+
             var callHttpClientMethodExpression = Expression.Call(
                 Expression.Constant(_httpClient),
                 GetMethodByRequestType(httpAttribute)
