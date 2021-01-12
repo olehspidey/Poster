@@ -2,10 +2,12 @@ namespace Poster.Tests
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Exceptions;
     using Http.Clients.Abstract;
     using Moq;
     using TestServices;
     using TestServices.TestModels;
+    using TestServices.WrongServices;
     using Xunit;
 
     public class PosterTests
@@ -44,6 +46,38 @@ namespace Poster.Tests
             Assert.Equal(order.Id, orderFromPoster.Id);
             Assert.Equal(order.Name, orderFromPoster.Name);
             Assert.Equal(order.Price, orderFromPoster.Price);
+        }
+
+        [Fact]
+        public void Build_Service_Should_Throw_Exception_If_Get_Method_Contains_Body()
+        {
+            Assert.Throws<ServiceInitializeException>(() => new PosterBuilder()
+                .Build()
+                .BuildService<IWrongGetOrderService>());
+        }
+        
+        [Fact]
+        public void Build_Service_Should_Throw_Exception_If_Delete_Method_Contains_Body()
+        {
+            Assert.Throws<ServiceInitializeException>(() => new PosterBuilder()
+                .Build()
+                .BuildService<IWrongDeleteOrderService>());
+        }
+
+        [Fact]
+        public void Build_Service_Should_Throw_Exception_If_Service_Contain_Method_Without_HttAttr()
+        {
+            Assert.Throws<ServiceInitializeException>(() => new PosterBuilder()
+                .Build()
+                .BuildService<IWithoutHttpAttributeOrderService>());
+        }
+
+        [Fact]
+        public void Build_Service_Should_Throw_If_Service_Is_Empty()
+        {
+            Assert.Throws<ServiceInitializeException>(() => new PosterBuilder()
+                .Build()
+                .BuildService<IWithoutMethodsOrderService>());
         }
     }
 }

@@ -42,6 +42,9 @@ namespace Poster.Reflection
         public void ReplaceMethodsBodies<T>(IReadOnlyCollection<MethodInfo> methods, Mock<T> mock)
             where T : class
         {
+            if (!methods.Any())
+                throw new ServiceInitializeException("Service should contain at least one method");
+
             foreach (var method in methods)
             {
                 var serviceMethodReturnTypeInfo = GetServiceMethodReturnTypeInfo(method);

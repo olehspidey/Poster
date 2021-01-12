@@ -67,14 +67,14 @@ namespace Poster.Expressions
             => GetExpressionForTask(
                 serviceMethod.GetParameters(),
                 serviceMethod.ReturnType.GenericTypeArguments.First(),
-                serviceMethod.GetCustomAttributes());
+                GetHttpAttribute(serviceMethod.GetCustomAttributes()));
 
         /// <inheritdoc/>
         public LambdaExpression GetExpressionForNonGenericTask(MethodInfo serviceMethod)
             => GetExpressionForTask(
                 serviceMethod.GetParameters(),
                 typeof(Empty),
-                serviceMethod.GetCustomAttributes());
+                GetHttpAttribute(serviceMethod.GetCustomAttributes()));
 
         private static ParameterInfo? GetBodyParameter(IEnumerable<ParameterInfo> parameterInfos)
             => parameterInfos.FirstOrDefault(p => p.GetCustomAttribute<BodyAttribute>() != null);
@@ -82,26 +82,37 @@ namespace Poster.Expressions
         private static ParameterInfo? GetCancellationTokenParameter(IEnumerable<ParameterInfo> parameterInfos)
             => parameterInfos.FirstOrDefault(p => p.ParameterType == typeof(CancellationToken));
 
-        private LambdaExpression GetExpressionForTask(ParameterInfo[] parameters, Type taskGenericArgumentType, IEnumerable<Attribute> customAttributes)
+        private static HttpAttribute? GetHttpAttribute(IEnumerable<Attribute> attributes)
+            => attributes
+                .FirstOrDefault(a => a is GetAttribute
+                                     || a is PostAttribute
+                                     || a is PatchAttribute
+                                     || a is PutAttribute
+                                     || a is DeleteAttribute) as HttpAttribute;
+
+        private static void ValidateServiceMethodParameters(ParameterInfo[] parameters, HttpAttribute httpAttribute)
         {
-            foreach (var attribute in customAttributes)
-            {
-                if (attribute is HttpAttribute httpAttribute)
-                {
-                    if(httpAttribute is PostAttribute || httpAttribute is PutAttribute || httpAttribute is PatchAttribute)
-                        return GetExpressionForBodyRequest(
-                            httpAttribute,
-                            taskGenericArgumentType,
-                            parameters);
+            if(parameters.Any(p => p.GetCustomAttribute<BodyAttribute>() != null && (httpAttribute is GetAttribute || httpAttribute is DeleteAttribute)))
+                throw new ServiceInitializeException("GET or DELETE http request cannot has body");
+        }
 
-                    return GetExpressionForBodilessRequest(
-                        httpAttribute,
-                        taskGenericArgumentType,
-                        parameters);
-                }
-            }
+        private LambdaExpression GetExpressionForTask(ParameterInfo[] parameters, Type taskGenericArgumentType, HttpAttribute? httpAttribute)
+        {
+            if(httpAttribute is null)
+                throw new ServiceInitializeException("Service methods should contain http attribute");
 
-            throw new ServiceInitializeException("Service methods should contain http attribute");
+            ValidateServiceMethodParameters(parameters, httpAttribute);
+
+            if (httpAttribute is PostAttribute || httpAttribute is PutAttribute || httpAttribute is PatchAttribute)
+                return GetExpressionForBodyRequest(
+                    httpAttribute,
+                    taskGenericArgumentType,
+                    parameters);
+
+            return GetExpressionForBodilessRequest(
+                httpAttribute,
+                taskGenericArgumentType,
+                parameters);
         }
 
         private LambdaExpression GetExpressionForBodilessRequest(HttpAttribute httpAttribute, Type returnType, ParameterInfo[] parameters)
