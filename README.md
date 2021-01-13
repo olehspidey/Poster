@@ -1,3 +1,5 @@
+[![Version](https://img.shields.io/nuget/vpre/Poster.svg)](https://www.nuget.org/packages/Poster)
+
 ### Description
 This library helps to build a HTTP service very quickly with embedded serialization and deserialization. You just need create interface, mark HTTP methods with attributes (GET, POST, DELETE etc.) and Poster will create your interface implementation for you.
 ### HTTP service implementation example
