@@ -47,3 +47,4 @@ If you want to send request body, you can add it to your method as argument and 
 ```
 *Warning*: only POST, PUT, PATCH methods support request body.
 
+#### More information you can find in our [wiki](https://github.com/olehspidey/Poster/wiki "wiki")
