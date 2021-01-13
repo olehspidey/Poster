@@ -42,7 +42,7 @@ namespace Poster.Tests
                 .Returns(() => Task.FromResult(order));
             
             var orderFromPoster = await _testGenericOrderService.GetOrderAsync(1);
-            
+             
             Assert.Equal(order.Id, orderFromPoster.Id);
             Assert.Equal(order.Name, orderFromPoster.Name);
             Assert.Equal(order.Price, orderFromPoster.Price);
