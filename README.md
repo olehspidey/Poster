@@ -1,4 +1,6 @@
 [![Version](https://img.shields.io/nuget/vpre/Poster.svg)](https://www.nuget.org/packages/Poster)
+[![Downloads](https://img.shields.io/nuget/dt/Poster.svg)](https://www.nuget.org/packages/Moq)
+[![Telegram Chat](https://img.shields.io/static/v1?label=chat&message=Telegram&color=blue)](https://t.me/posterDotnet)
 
 ### Description
 This library helps to build a HTTP service very quickly with embedded serialization and deserialization. You just need create interface, mark HTTP methods with attributes (GET, POST, DELETE etc.) and Poster will create your interface implementation for you.
