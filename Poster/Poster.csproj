@@ -6,6 +6,11 @@
         <LangVersion>9</LangVersion>
         <RootNamespace>Poster</RootNamespace>
         <CodeAnalysisRuleSet>../Poster.ruleset</CodeAnalysisRuleSet>
+        <PackageVersion>0.0.2</PackageVersion>
+        <PackageProjectUrl>https://github.com/olehspidey/Poster</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/olehspidey/Poster</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <PackageTags>Poster HttpClient HttService http</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
